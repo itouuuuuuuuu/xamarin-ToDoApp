@@ -7,6 +7,7 @@ namespace SampleApp
 	public class SampleAppPage : ContentPage
 	{
 		readonly SqliteControll wSqliteControll = new SqliteControll();
+        private int padding = 0;  // OS毎のpadding
 
 		public SampleAppPage()
 		{
@@ -24,7 +25,7 @@ namespace SampleApp
 			wListView.ItemTapped += async (s, a) =>
 			{
 				var wItem = (SqliteItem)a.Item;
-				if (await DisplayAlert("削除しますか", wItem.Text, "はい", "いいえ"))
+				if (await DisplayAlert("以下の内容を削除しますか", wItem.Text, "はい", "いいえ"))
 				{
 					// データの削除
 					wSqliteControll.DeleteItem(wItem);
@@ -37,7 +38,7 @@ namespace SampleApp
 			// ラベル１
 			var wLabel1 = new Label
 			{
-				Text = "ToDOアプリ",
+				Text = "ToDoアプリ",
 				BackgroundColor = Color.Navy,
 				TextColor = Color.White,
 				WidthRequest = 300
@@ -61,6 +62,7 @@ namespace SampleApp
 			// 登録ボタン
 			var wButtonIns = new Button
 			{
+                
 				WidthRequest = 60,
 				TextColor = Color.White,
 				Text = "登録"
@@ -89,10 +91,21 @@ namespace SampleApp
 				}
 			};
 
+            // OS毎のpaddingを設定
+			switch (Device.RuntimePlatform)
+			{
+				case Device.iOS:
+                    this.padding = 20;
+					break;
+				case Device.Android:
+                    this.padding = 0;
+					break;
+			}
+
 			// 画面レイアウト
 			Content = new StackLayout
 			{
-				Padding = new Thickness(0, Device.OnPlatform(20, 0, 0), 0, 0),
+				Padding = new Thickness(0, this.padding, 0, 0),
 				Children = {
 					wLabel1,
 					new StackLayout{
